@@ -6,18 +6,20 @@ from dash.dependencies import Input, Output, State
 
 from cards import card_cotd, card_del, card_dr, card_FC, card_FH, card_status, card_tia
 from dataframes_new import fleet_regs
-from plots import plotMonFH
+from plots import plotCountry, plotMonFH
 
 ### LAYOUT
 layout = dbc.Container(
     [
-        dbc.Row(  # row of forms
+        dbc.Form(  # form
             [
-                dbc.Form(  # Form
+                dbc.Row(
                     [
                         dbc.Col(  # period form
                             [
-                                dbc.Label("Period", html_for="dropdown-period"),
+                                dbc.Label(
+                                    "Period", html_for="dropdown-period", width="auto"
+                                ),
                                 dcc.Dropdown(
                                     id="dropdown-period",
                                     options=[
@@ -33,26 +35,19 @@ layout = dbc.Container(
                         ),
                         dbc.Col(  # aircraft form
                             [
-                                dbc.Label("Registration", html_for="dropdown-reg"),
+                                dbc.Label(
+                                    "Registration",
+                                    html_for="dropdown-reg",
+                                    width="auto",
+                                ),
                                 dcc.Dropdown(
                                     id="dropdown-reg",
-                                    options=["ALL"] + fleet_regs(),
-                                    value="ALL",
+                                    options=fleet_regs(),
+                                    value=fleet_regs(),
+                                    multi=True,
                                 ),
                             ],
                             width=2,
-                        ),
-                        dbc.Col(  # Filter button
-                            [
-                                dbc.Button(
-                                    "Filter",
-                                    id="filter-button",
-                                    color="primary",
-                                    type="submit",
-                                ),
-                            ],
-                            class_name="pt-2 d-flex align-items-end",
-                            width="auto",
                         ),
                     ],
                 ),
@@ -127,23 +122,45 @@ layout = dbc.Container(
                                 displaylogo=False,
                             ),
                         ),
+                        dbc.Card(
+                            dbc.CardBody(
+                                [
+                                    html.H5("Utilization Averages"),
+                                    dbc.Badge(
+                                        "FH per Day",
+                                        color="light",
+                                        class_name="me-3",
+                                    ),
+                                    dbc.Badge(
+                                        "FC per Day",
+                                        color="light",
+                                        class_name="me-3",
+                                    ),
+                                    dbc.Badge(
+                                        "FH per Cycle",
+                                        color="light",
+                                        class_name="me-3",
+                                    ),
+                                ]
+                            )
+                        ),
                     ],
                     width=6,
                 ),
                 dbc.Col(
                     [
                         dcc.Graph(
-                            id="graph-engine",
+                            id="graph-map",
                             config=dict(
                                 toImageButtonOptions=dict(
                                     width=1280,
                                     height=720,
-                                    filename="dash_graph",
+                                    filename="dash_map",
                                     format="png",
                                 ),
                                 displaylogo=False,
                             ),
-                        ),
+                        )
                     ],
                     width=6,
                 ),
@@ -158,10 +175,13 @@ layout = dbc.Container(
 ### CALLBACKS
 @callback(
     Output("graph-fleet", "figure"),
+    Output("graph-map", "figure"),
     Input("dropdown-period", "value"),
+    Input("dropdown-reg", "value"),
 )
-def update_graph(period):
+def update_graph(period, regs):
     if period:
-        fig = plotMonFH(period)
+        fig = plotMonFH(period, regs)
+        figMap = plotCountry(period, regs)
 
-    return fig
+    return fig, figMap

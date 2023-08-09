@@ -9,10 +9,9 @@ from pages import page1, page2, page3
 
 ### Instantiate Dash
 app = Dash(
-    __name__, external_stylesheets=[dbc.themes.MINTY], suppress_callback_exceptions=True
-)
-app.config.update(
-    FTPHOST="103.126.58.35", FTPPORT=2222, FTPUSER="user", FTPPWD="asdQJ!@341!"
+    __name__,
+    external_stylesheets=[dbc.themes.MINTY],
+    suppress_callback_exceptions=True,
 )
 
 server = app.server
@@ -26,70 +25,59 @@ app.layout = html.Div(
             [
                 dbc.Row(
                     [
-                        dbc.Col(
-                            [
-                                dbc.Navbar(
-                                    dbc.Container(
+                        dbc.Navbar(
+                            dbc.Container(
+                                [
+                                    html.A(
+                                        dbc.Row(
+                                            [dbc.Col(html.Img(src=LOGO, height="30px"))]
+                                        )
+                                    ),
+                                    dbc.Nav(
                                         [
-                                            html.A(
-                                                dbc.Row(
-                                                    [
-                                                        dbc.Col(
-                                                            html.Img(
-                                                                src=LOGO, height="30px"
-                                                            )
-                                                        )
-                                                    ]
+                                            dbc.NavItem(
+                                                dbc.NavLink(
+                                                    "Executive Summary",
+                                                    id="dash-link",
+                                                    href="/dashboard",
                                                 )
                                             ),
-                                            dbc.Nav(
-                                                [
-                                                    dbc.NavItem(
-                                                        dbc.NavLink(
-                                                            "Executive Summary",
-                                                            id="dash-link",
-                                                            href="/dashboard",
-                                                        )
-                                                    ),
-                                                    dbc.NavItem(
-                                                        dbc.NavLink(
-                                                            "Fleet",
-                                                            id="techpub-link",
-                                                            href="/fleet",
-                                                        )
-                                                    ),
-                                                    dbc.NavItem(
-                                                        dbc.NavLink(
-                                                            "Engines",
-                                                            id="pirep-link",
-                                                            href="engines",
-                                                        )
-                                                    ),
-                                                    dbc.NavItem(
-                                                        dbc.NavLink(
-                                                            "APU",
-                                                            id="apu-link",
-                                                            href="apu",
-                                                        )
-                                                    ),
-                                                    dbc.NavItem(
-                                                        dbc.NavLink(
-                                                            "Systems & components",
-                                                            id="sys-link",
-                                                            href="syscomp",
-                                                        )
-                                                    ),
-                                                ],
-                                                navbar=True,
+                                            dbc.NavItem(
+                                                dbc.NavLink(
+                                                    "Fleet",
+                                                    id="fleet-link",
+                                                    href="/fleet",
+                                                )
+                                            ),
+                                            dbc.NavItem(
+                                                dbc.NavLink(
+                                                    "Engines",
+                                                    id="pirep-link",
+                                                    href="engines",
+                                                )
+                                            ),
+                                            dbc.NavItem(
+                                                dbc.NavLink(
+                                                    "APU",
+                                                    id="apu-link",
+                                                    href="apu",
+                                                )
+                                            ),
+                                            dbc.NavItem(
+                                                dbc.NavLink(
+                                                    "Systems & components",
+                                                    id="sys-link",
+                                                    href="syscomp",
+                                                )
                                             ),
                                         ],
-                                        fluid=True,
-                                    )
-                                )
-                            ]
+                                        navbar=True,
+                                    ),
+                                ],
+                                fluid=True,
+                            ),
                         )
                     ],
-                    class_name="pt-3",
                 )
             ],
             fluid=True,
@@ -103,7 +91,7 @@ app.layout = html.Div(
 @callback(
     Output("page-content", "children"),
     Output("dash-link", "active"),
-    Output("techpub-link", "active"),
+    Output("fleet-link", "active"),
     Input("url", "pathname"),
 )
 def display_page(pathname):

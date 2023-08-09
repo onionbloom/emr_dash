@@ -15,12 +15,13 @@ from dataframes import (
     get_techlog_df,
     get_util_df,
 )
-from dataframes_new import get_df
+from dataframes_new import get_deps, get_df
 
 util_df = get_util_df()
 oil_consum = get_fluids_df()
 
 template = load_figure_template("minty")
+colseq = list(px.colors.qualitative.Set3) + list(px.colors.qualitative.Pastel)
 
 
 def get_x_period(period):
@@ -36,36 +37,51 @@ def get_x_period(period):
     return x_period
 
 
-def plotMonFH(period=3):
+def plotMonFH(period=3, regs=[]):
     """
     This function plots the monthly FH summary
     """
 
-    # Get the dataframe and filter the last 'period' months
-    df = get_df("ac_util")
+    # Get the dataframe
+    df = get_df("ac_util.csv")
     df["Start"] = pd.to_datetime(df["Start"])
+    df["TAH/Diff"] = df["TAH/Diff"].round(2)
     df = df.rename(columns={"A/C": "ac_reg"})
-    df = (
-        df[
-            (df["Start"].dt.month > datetime.now().month - period)
-            & (df["Start"].dt.year == datetime.now().year)
-        ]
-        .drop(columns=["A/C Group", "End"])
-        .sort_values("A/C")
+
+    # Filter
+    queryPeriod = (df["Start"].dt.month > datetime.now().month - period) & (
+        df["Start"].dt.year == datetime.now().year
     )
-    annotTAH = df["TAH/Diff"].round(2)
+    queryRegs = df["ac_reg"].isin(regs)
+    df = (
+        df[queryPeriod & queryRegs]
+        .drop(columns=["A/C Group", "End"])
+        .sort_values("ac_reg")
+    )
+
+    # Create figure
     fig = px.bar(
         df,
         x="Start",
         y="TAH/Diff",
         color="ac_reg",
+        color_discrete_sequence=colseq,
         template=template,
-        text=annotTAH,
         barmode="group",
+        text="ac_reg",
+        labels={"TAH/Diff": "Flight Hours"},
+        hover_data={"ac_reg": False, "Start": False},
     )
-    fig.update_traces(
-        hovertemplate="Aircraft: %{ac_reg}<br>FH: %{text}",
-        textposition="outside",
+    fig.update_traces(textposition="outside")
+    fig.update_layout(
+        showlegend=False,
+        xaxis=dict(title="Month", dtick="M1"),
+        yaxis=dict(title="Flight Hours"),
+        title_text=f"{period}-month Period Flying Hours",
+        title_xanchor="center",
+        title_x=0.5,
+        title_y=0.95,
+        modebar=dict(orientation="v", remove=["zoom", "lasso", "autoscale"]),
     )
 
     return fig
@@ -940,6 +956,31 @@ def plotMEL(period=3):
         xaxis=dict(title="Month", type="date", dtick="M1"),
         yaxis=dict(title="MEL Raised"),
         modebar=dict(orientation="v", remove=["zoom", "lasso", "autoscale"]),
+    )
+
+    return fig
+
+
+# Plot country map
+def plotCountry(period, regs):
+    # Get the dataframe
+    df = get_deps(period, regs)
+
+    fig = px.scatter_geo(
+        df,
+        lat="lat",
+        lon="lng",
+        color="Serv.Type",
+        text="city",
+        size="Serv.Type",
+        title="Departure Counts from Cities",
+        scope="asia",
+        hover_data={"lat": False, "lng": False},
+        labels={"Serv.Type": "Rev. Flights"},
+    )
+    fig.update_traces(hovertemplate="%{marker.size} departures")
+    fig.update_geos(
+        fitbounds="locations", resolution=50, visible=False, showcountries=True
     )
 
     return fig
