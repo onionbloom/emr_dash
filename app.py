@@ -4,8 +4,7 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 from dash import Dash, callback, dcc, html
 from dash.dependencies import Input, Output
-
-from pages import page1, page2, page3
+from pages import page1, page2, page3, page4, page5
 
 ### Instantiate Dash
 app = Dash(
@@ -52,7 +51,7 @@ app.layout = html.Div(
                                             dbc.NavItem(
                                                 dbc.NavLink(
                                                     "Engines",
-                                                    id="pirep-link",
+                                                    id="eng-link",
                                                     href="engines",
                                                 )
                                             ),
@@ -92,21 +91,24 @@ app.layout = html.Div(
     Output("page-content", "children"),
     Output("dash-link", "active"),
     Output("fleet-link", "active"),
+    Output("eng-link", "active"),
+    Output("apu-link", "active"),
+    Output("sys-link", "active"),
     Input("url", "pathname"),
 )
 def display_page(pathname):
     if pathname == "/dashboard":
-        return page1.layout, True, False
+        return page1.layout, True, False, False, False, False
     elif pathname == "/fleet":
-        return page2.layout, False, True
+        return page2.layout, False, True, False, False, False
     elif pathname == "/engines":
-        return page3.layout, False, False
+        return page3.layout, False, False, True, False, False
     elif pathname == "/apu":
-        pass
+        return page4.layout, False, False, False, True, False
     elif pathname == "/syscomp":
-        pass
+        return page5.layout, False, False, False, False, True
     else:
-        return page1.layout, True, False
+        return page1.layout, True, False, False, False, False
 
 
 if __name__ == "__main__":

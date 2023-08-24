@@ -1,0 +1,135 @@
+﻿A/C,Date,Station,Flightno.,Type,Delay,Int. Code,Event ID,ATA,Event Description,W/O Ref.,Rectification
+PWA,2022-09-11,CGK,IP240,DELAY,1:30,46,1,34-43,"Problem :
+ During aircraft preparation for IP240, PWA found IR1 FAULT.
+ PWA as IP240 experience RTA due to during Engine start NAV TCAS FAULT appear on ECAM.
+ PWA as IP102 experience RTA during taxi NAV TCAS FAULT appear on ECAM.
+ 
+  
+ Action :
+ Ref AMM 34-13-00-740-002 reset CB and realignment result problem still exist. To avoid delay, problem transfer to HIL ref MEL 34-10-04B
+ To minimize delay, IP240 change aircraft with PK-PWD and PK-PWA operate as IP102.
+ Do read out PFR fault message 34-12-34: Check related CB with TCAS system result no pop out. Performed TSM 34-43-00-810-801-A. Ref PFR shown TCAS fault failure message
+ ADIRU (1FP1) source from IR1. Do swap ADIRU 1 and ADIRU 3 Ref AMM 34-43-00-740-001 Result OK. For make sure, do realignment and do bite test of IR 1, 2, 3 result all test OK
+ and TCAS fault message disappear. Continue performed Idle check both engine result ECAM status normal and no other message appears ref AMM 71-00-00-710-715-A.
+ Aircraft declared AOG and IP102/103 cancelled. Continue troubleshoot ref TSM 34-43-00-810-801-A wiring check performed as follows:
+ - Check 115 VAC at pin AC/1 result good.
+ - Check ground signal at pin AC/7 result good.
+ - Performed TCAS ground scanning and bite test. Result test OK.
+ But ref TFU 34.43.00.021 state that TCAS PN 940-0351-005 experienced ECAM Warning NAV TCAS FAULT temporary displayed in flight.
+ 
+  
+ Preventive Action :
+ Make sure every HIL issued are comply with Operational and Maintenance Procedure as stated on the MEL.
+ Ref Technical Request from Airbus recommends to follow recommendation of the TFU 34.43.00.021 to use PN 940-0351-006.
+  
+ Follow Up :
+ Sourcing and provide spare TCAS Computer with PN 940-0351-006 and ADIRU HG2030AE23.
+  ",,
+PWA,2022-09-11,CGK,IP240,DELAY,1:31,46,6,,,,
+PWA,2022-09-21,DPS,IP107,DELAY,0:54,43,2,34-10,"Problem :
+ APU Bleed Fault
+ IR alignment blinking on ECAM
+ 
+ Action :
+ Reset APU ECB, Restart APU. APU running normal and bleed normal ref AMM 36-12-00-810-801.
+ Realignment of ADIRS ref AMM 34-10-00-860-004-A. Alignment succeed.
+ 
+  
+ Pre Analysis :
+ Since ECB has been reset, the APU will experience shut down and all electrical power are off.  
+ Upon the availability of electrical power, ADIRS alignment need to be done.
+ IR align memo flashing in green appears on ECAM.
+ Crew not realized to enter the present position on MCDU.
+ 
+  
+ Preventive Action :
+ In the event of Transit check, if theres a defect which is deferrable, Engineer in charge should insert the defect to HIL/ASDCS to avoid delay.
+ Notify Flight Operation to review ADIRS alignment procedure.
+ 
+  
+ Follow Up :
+ Issue Discrepancy Report from PAS Quality to GMF (Quality dept & DPSMM) regarding Engineers lack of awareness on transit handling.
+ 
+  ",,
+PWA,2022-11-20,DPS,IP100,DELAY,1:00,43,3,24-21,"Problem :
+ IDG Eng #1 Oil High Temp +- 152 C degree
+  
+ Action :
+ 05.50 PFR Check ATA 79-40-00 IDG FRV (Oil Temp) Eng 1A
+ 06.00 Check IDG Oil Actual found overfill (on red band).
+ 06.05 Contact MCC GMF and perform draining IDG Eng#1 Oil ref AMM 12-13-24-680-040. Advise by MOC Pelita to perform servicing ref AMM 12-13-24-612-041-B.
+ 06.35 Aircraft serviceable
+ 
+  
+ Pre-Analysis:
+ History / Maintenance Action Taken:
+ On 22 Sept 2022 PIREP IDG Oil temp more than 147 C degree (momentarily). IDG Oil Level found overfill. Action: Perform servicing IDG oil until green band IAW AMM 12-13-
+ 24-612-804-A. Problem no longer appear until 21 Oct 2022.
+ On 21 Oct 2022 Routine Task Card IDG #1 Filter replacement is performed (Task card A00000416)
+ On 22 Oct 2022 Elect ECAM IDG #1 Temp Intermittent rise during descent +148 C degree. Ref TSM 79-40-00-810-801-A PFR check for IDG failure warning per message relative
+ to fuel level sensing element: FUEL LEVEL SENSING L INN TEMP SENSOR 29QJ1. Ref TSM: 28-46-00-810-813-A: do BITE Test of FLSS result Shown L INN TEMP SENSOR 29QJ1.
+ Check actual IDG oil on yellow band, do servicing IDG OIL until green band. Ref AMM: 12-13-24-612-804-A. Problem no longer appear until 12 Nov 2022.
+ 12 Nov 2022 during Daily check found IDG DP pop out. Replaced filter but packing NIL spare. Issued TR to replace O-ring max in 10 days.
+ 13 Nov 2022 PIREP AML Seq A002227 IDG #1 TEMP TENDENCY RAISING DURING DESCENT UP TO LIMIT 147 CENTIGRADE. Action: IDG #1 found almost to red band. Servicing
+ carried out up to correct level ref AMM 12-13-24-612-041-B. Problem no longer appear until 19 Nov 2022.
+ 19 Nov 2022 replace IDG Eng #1 O-ring
+ 20 Nov 2022 PIREP During Descent Adv IDG Oil Temp +- 152 C degree. Servicing performed IAW REF AMM 12-13-24-680-040.
+ 
+ Conclusion:
+ Engine #1 IDG high oil temperature appear after every IDG oil servicing.
+ There is no AML record for engine idle run prior to check IDG oil level.
+ Maintenance was performed by ineffective AMM reference
+ Lack of understanding maintenance procedure refer to AMM 12-13-24-612-041-B
+ Suspected engine idle run or engine dry motoring was not performed prior to check IDG oil level Ref AMM 12-13-24-612-041-B PARA 4F.
+ Missed coordination when the aircraft has a defect on transit at DPS
+ 
+  
+ Preventive Action :
+ Conduct briefing to encourage to GMFAA personnel related to AMM 12-13-24-612-041-B IDG oil servicing by GMF
+ Quality Department
+ MOC will control and monitor for maintenance task related to IDG oil servicing
+ Remind GMFAA Line Maintenance personnel to establish a good communication and coordination only with PAS MOC
+ instead of GMFAA MCC in the event of operational irregularities
+ Remind GMFAA personnel to record engine ground run on AML
+ Perform Daily Checklist correctly
+ 
+  
+ Follow Up :
+ PAS Quality will create Discrepancy Report to GMFAA
+ Perform one time inspection of IDG oil level on all PAS fleet and report to MOC PAS
+ 
+  ",,
+PWC,2022-12-23,CGK,IP108,DELAY,0:27,43,5,,,,
+PWA,2023-02-19,CGK,IP102,DELAY,0:29,44,13,23,,,
+PWA,2023-03-02,DPS,IP103,DELAY,0:33,41,8,36,"1. AIRCRAFT ARRIVED WITH NIL COMPLAINT, BUT AFTER ENG START MSG APPEAR ON ECAM AIR L WING LEAK. PILOT REQUEST RETURN TO GATE (RTG).
+  
+ 2. AFTER BLOCK ON, CHECK PFR MSG: AIR L WING LEAK. L WING LOOP A AND DO TROUBLESHOOT REF TSM 36-22-00-810-801A. RESET CB BMC 1&2, DO BITE TEST BMC 1&2, RESULT GOOD. MSG ON ECAM DISAPPEARED.
+ 
+ 3. AFTER AIRCRAFT RELEASE, ENG START ON GATE AND DO SECOND PUSHBACK.",,
+PWA,2023-03-05,CGK,IP202,DELAY,0:30,46,9,32,,,
+PWD,2023-03-25,YIA,IP241,DELAY,0:17,46,11,36,,,
+PWA,2023-04-27,BPN,IP601,DELAY,3:18,41,14,29,,,
+PWH,2023-05-01,CGK,IP320,DELAY,0:18,41,15,,,,
+PWH,2023-05-02,CGK,IP104,DELAY,0:20,41,16,,,,
+PWH,2023-05-02,CGK,IP108,DELAY,1:03,46,17,,,,
+PWH,2023-05-02,DPS,IP105,DELAY,0:19,41,18,,,,
+PWD,2023-05-09,CGK,IP600,DELAY,0:13,41,20,,,,
+PWG,2023-05-20,CGK,IP600,DELAY,0:37,46,27,,,,
+PWH,2023-06-15,SUB,IP203,DELAY,0:13,43,37,24,,50890,
+PWH,2023-06-15,CGK,IP202,DELAY,0:24,43,29,24,,50890,
+PWE,2023-07-08,CGK,IP200,DELAY,3:01,42,38,22,RUD TRV LIM SYS fault appearing on ECAM,54083,"ACTION Ref PFR IP104 07 Jul 2023 shown warning message 22-00 RUD TRV LIM SYS fault with failure message 22-66-34 AFS:FAC1/RTL ACTR 4CC and AFS:FAC2/RTL ACTR 4CC with source AFS 1 and AFS 2.
+ Ref TSM 22-61-00-810-805A need to replace Rudder Travel Limiter Actuator 4CC, spare taken from PK-PWF (Hangar Painting GMF) due to spare NIL.
+ Replace RTL Actuator 4CC PN: DV8456701-5 SN IN: 6374 OUT: 3631, replacement ref AMM 27-23-51-000-001A/-400-001A and OPC perform result good ref AMM 22-61-
+ 00-710-001A.
+ 
+  "
+PWC,2023-07-11,SUB,IP209,DELAY,0:20,43,39,52,,,
+PWC,2023-07-11,CGK,IP202,DELAY,0:25,93,53,,,,
+PWC,2023-07-20,CGK,IP206,DELAY,0:10,93,50,,,,
+PWC,2023-07-20,SUB,IP207,DELAY,0:03,93,51,,,,
+PWC,2023-07-20,CGK,IP100,DELAY,0:22,43,40,32,,,
+PWC,2023-07-20,DPS,IP101,DELAY,0:08,93,49,,Impact delay from IP100,,
+PWC,2023-07-22,PDG,IP353,DELAY,0:15,93,43,,,,
+PWA,2023-07-28,YIA,IP243,DELAY,0:49,93,52,,,,
+PWA,2023-07-28,CGK,IP242,DELAY,1:03,43,47,25,,,
+PWC,2023-08-02,PNK,IP633,DELAY,1:05,41,48,,,,

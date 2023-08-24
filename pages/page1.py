@@ -5,54 +5,12 @@ from dash.dash_table.Format import Format, Scheme
 from dash.dependencies import Input, Output, State
 
 from cards import card_cotd, card_del, card_dr, card_FC, card_FH, card_status, card_tia
-from dataframes_new import fleet_regs
-from plots import plotCountry, plotMonFH
+from dataframes import get_df
+from plots import plotCountry, plotMonFH, plotTechDR
 
 ### LAYOUT
 layout = dbc.Container(
     [
-        dbc.Form(  # form
-            [
-                dbc.Row(
-                    [
-                        dbc.Col(  # period form
-                            [
-                                dbc.Label(
-                                    "Period", html_for="dropdown-period", width="auto"
-                                ),
-                                dcc.Dropdown(
-                                    id="dropdown-period",
-                                    options=[
-                                        {"label": "This Month", "value": 1},
-                                        {"label": "3 Months", "value": 3},
-                                        {"label": "6 Months", "value": 6},
-                                        {"label": "12 Months", "value": 12},
-                                    ],
-                                    value=3,
-                                ),
-                            ],
-                            width=2,
-                        ),
-                        dbc.Col(  # aircraft form
-                            [
-                                dbc.Label(
-                                    "Registration",
-                                    html_for="dropdown-reg",
-                                    width="auto",
-                                ),
-                                dcc.Dropdown(
-                                    id="dropdown-reg",
-                                    options=fleet_regs(),
-                                    value=fleet_regs(),
-                                    multi=True,
-                                ),
-                            ],
-                            width=2,
-                        ),
-                    ],
-                ),
-            ],
-        ),
         dbc.Row(  # row of cards
             [
                 dbc.Col(  # FH card
@@ -106,7 +64,71 @@ layout = dbc.Container(
             ],
             class_name="pt-3",
         ),
-        dbc.Row(  # row of graphics
+        dbc.Row(  # row of map graphic
+            [
+                dbc.Col(
+                    [
+                        dcc.Graph(
+                            id="graph-map",
+                            config=dict(
+                                toImageButtonOptions=dict(
+                                    width=1280,
+                                    height=720,
+                                    filename="dash_map",
+                                    format="png",
+                                ),
+                                displaylogo=False,
+                            ),
+                        ),
+                    ],
+                    width=9,
+                ),
+                dbc.Col(
+                    [
+                        html.H5(
+                            "Graphics Slicer",
+                            className="fw-bold text-center",
+                            style={"color": "#013764"},
+                        ),
+                        dbc.Form(
+                            [
+                                dbc.Label(
+                                    "Period", html_for="dropdown-period", width="auto"
+                                ),
+                                dcc.Dropdown(
+                                    id="dropdown-period",
+                                    options=[
+                                        {"label": "This Month", "value": 1},
+                                        {"label": "3 Months", "value": 3},
+                                        {"label": "6 Months", "value": 6},
+                                        {"label": "12 Months", "value": 12},
+                                    ],
+                                    value=3,
+                                ),
+                                dbc.Label(
+                                    "Registration",
+                                    html_for="dropdown-reg",
+                                    width="auto",
+                                ),
+                                dcc.Dropdown(
+                                    id="dropdown-reg",
+                                    options=get_df("ac_util.csv")["A/C"]
+                                    .sort_values(ascending=True)
+                                    .tolist(),
+                                    value=get_df("ac_util.csv")["A/C"]
+                                    .sort_values(ascending=True)
+                                    .tolist(),
+                                    multi=True,
+                                ),
+                            ]
+                        ),
+                    ],
+                    width=3,
+                ),
+            ],
+            class_name="pt-3",
+        ),
+        dbc.Row(  # row of chart graphic
             [
                 dbc.Col(
                     [
@@ -122,47 +144,38 @@ layout = dbc.Container(
                                 displaylogo=False,
                             ),
                         ),
-                        dbc.Card(
-                            dbc.CardBody(
-                                [
-                                    html.H5("Utilization Averages"),
-                                    dbc.Badge(
-                                        "FH per Day",
-                                        color="light",
-                                        class_name="me-3",
-                                    ),
-                                    dbc.Badge(
-                                        "FC per Day",
-                                        color="light",
-                                        class_name="me-3",
-                                    ),
-                                    dbc.Badge(
-                                        "FH per Cycle",
-                                        color="light",
-                                        class_name="me-3",
-                                    ),
-                                ]
-                            )
-                        ),
                     ],
-                    width=6,
+                    width=9,
                 ),
                 dbc.Col(
                     [
-                        dcc.Graph(
-                            id="graph-map",
-                            config=dict(
-                                toImageButtonOptions=dict(
-                                    width=1280,
-                                    height=720,
-                                    filename="dash_map",
-                                    format="png",
-                                ),
-                                displaylogo=False,
-                            ),
-                        )
-                    ],
-                    width=6,
+                        html.H5(
+                            "Chart Selection",
+                            className="fw-bold text-center",
+                            style={"color": "#013764"},
+                        ),
+                        dbc.RadioItems(
+                            options=[
+                                {
+                                    "label": "Utilization Summary",
+                                    "value": "util",
+                                },
+                                {
+                                    "label": "Dispatch Reliability",
+                                    "value": "dr",
+                                },
+                                {
+                                    "label": "Engines Summary",
+                                    "value": "eng",
+                                },
+                                {
+                                    "label": "APU Summary",
+                                    "value": "apu",
+                                },
+                            ],
+                            id="engine-radio",
+                        ),
+                    ]
                 ),
             ],
             class_name="pt-3",
@@ -181,7 +194,7 @@ layout = dbc.Container(
 )
 def update_graph(period, regs):
     if period:
-        fig = plotMonFH(period, regs)
+        fig = plotTechDR(period)
         figMap = plotCountry(period, regs)
 
     return fig, figMap
